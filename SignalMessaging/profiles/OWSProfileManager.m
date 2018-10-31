@@ -234,6 +234,11 @@ typedef void (^ProfileManagerFailureBlock)(NSError *error);
     void (^successBlock)(void) = ^{
         OWSLogInfo(@"Successfully updated service with profile.");
 
+        // We use a "self-only" contact sync to indicate to desktop
+        // that we've changed our profile and that it should do a
+        // profile fetch for "self".
+        [self.syncManager syncLocalContact];
+
         dispatch_async(dispatch_get_main_queue(), ^{
             successBlockParameter();
         });
